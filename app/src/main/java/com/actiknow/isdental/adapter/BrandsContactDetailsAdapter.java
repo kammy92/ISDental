@@ -13,8 +13,7 @@ import android.widget.TextView;
 
 import com.actiknow.isdental.R;
 
-import com.actiknow.isdental.model.ExhibitorContactDetail;
-import com.actiknow.isdental.utils.AppConfigTags;
+import com.actiknow.isdental.model.BrandsContactDetails;
 import com.actiknow.isdental.utils.Constants;
 import com.actiknow.isdental.utils.SetTypeFace;
 
@@ -22,12 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ExhibitorContactAdapter extends RecyclerView.Adapter<ExhibitorContactAdapter.ViewHolder> {
+public class BrandsContactDetailsAdapter extends RecyclerView.Adapter<BrandsContactDetailsAdapter.ViewHolder> {
     OnItemClickListener mItemClickListener;
     private Activity activity;
-    private List<ExhibitorContactDetail> exhibitorContactDetails = new ArrayList<ExhibitorContactDetail>();
+    private List<BrandsContactDetails> exhibitorContactDetails = new ArrayList<BrandsContactDetails>();
 
-    public ExhibitorContactAdapter(Activity activity, List<ExhibitorContactDetail> exhibitorContactDetails) {
+    public BrandsContactDetailsAdapter(Activity activity, List<BrandsContactDetails> exhibitorContactDetails) {
         this.activity = activity;
         this.exhibitorContactDetails = exhibitorContactDetails;
     }
@@ -35,13 +34,13 @@ public class ExhibitorContactAdapter extends RecyclerView.Adapter<ExhibitorConta
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
-        final View sView = mInflater.inflate(R.layout.list_item_exhivitor_detail, parent, false);
+        final View sView = mInflater.inflate(R.layout.list_item_brands_detail, parent, false);
         return new ViewHolder(sView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {//        runEnterAnimation (holder.itemView);
-        final ExhibitorContactDetail exhibitor = exhibitorContactDetails.get(position);
+        final BrandsContactDetails exhibitor = exhibitorContactDetails.get(position);
 
 
         holder.tvContactPerson.setTypeface(SetTypeFace.getTypeface(activity));

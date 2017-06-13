@@ -6,12 +6,12 @@ import java.util.ArrayList;
  * Created by Admin on 16-05-2017.
  */
 
-public class ExhibitorContactDetail {
+public class BrandsContactDetails {
     int id;
     String contact_person, address, email, website;
     ArrayList<String> contactList = new ArrayList<> ();
 
-    public ExhibitorContactDetail(int id, String contact_person, String address, String email, String website, ArrayList<String> contactList) {
+    public BrandsContactDetails(int id, String contact_person, String address, String email, String website, ArrayList<String> contactList) {
         this.id = id;
         this.contact_person = contact_person;
         this.address = address;

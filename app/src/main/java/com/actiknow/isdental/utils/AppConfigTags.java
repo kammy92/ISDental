@@ -35,6 +35,12 @@ public class AppConfigTags {
 
     // blood bank tags
 
+    public static final String COMPANY="";
+    public static final String COMPANY_ID="";
+    public static final String COMPANY_NAME="";
+    public static final String COMPANY_DESCRIPTION="";
+
+
 
     public static final String NAME= "name";
     public static final String EMAIL = "email";

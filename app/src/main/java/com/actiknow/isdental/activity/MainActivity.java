@@ -36,9 +36,7 @@ import android.widget.TextView;
 
 import com.actiknow.isdental.R;
 import com.actiknow.isdental.adapter.HomeServiceAdapter;
-
 import com.actiknow.isdental.model.HomeService;
-
 import com.actiknow.isdental.utils.SimpleDividerItemDecoration;
 import com.actiknow.isdental.utils.TypefaceSpan;
 import com.actiknow.isdental.utils.Utils;

@@ -29,4 +29,5 @@ public class AppConfigURL {
 
     public static String URL_SESSION_LIST = BASE_URL + "session";
     public static String URL_SESSION_FAVOURITE_LIST = BASE_URL + "session/favourite";
+    public static String URL_COMPANY_LIST = BASE_URL + "session/favourite";
 }

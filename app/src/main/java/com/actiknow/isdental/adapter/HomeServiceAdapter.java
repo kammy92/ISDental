@@ -1,42 +1,21 @@
 package com.actiknow.isdental.adapter;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.actiknow.isdental.R;
-
-import com.actiknow.isdental.activity.InformationActivity;
+import com.actiknow.isdental.activity.CompanyListActivity;
+import com.actiknow.isdental.activity.ShopOnlineActivity;
 import com.actiknow.isdental.model.HomeService;
 import com.actiknow.isdental.utils.SetTypeFace;
-import com.actiknow.isdental.utils.Utils;
-import com.actiknow.isdental.utils.VisitorDetailsPref;
-import com.actiknow.isdental.utils.qr_code.QRContents;
-import com.actiknow.isdental.utils.qr_code.QREncoder;
 import com.bumptech.glide.Glide;
-import com.google.zxing.WriterException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.content.Context.WINDOW_SERVICE;
 
 
 public class HomeServiceAdapter extends RecyclerView.Adapter<HomeServiceAdapter.ViewHolder> {
@@ -92,10 +71,14 @@ public class HomeServiceAdapter extends RecyclerView.Adapter<HomeServiceAdapter.
         public void onClick(View v) {
             HomeService homeService = homeServiceList.get(getLayoutPosition());
             switch (homeService.getId()) {
-
-                case 7:
-                    Intent intent6 = new Intent (activity, InformationActivity.class);
-                    activity.startActivity (intent6);
+                case 1:
+                    Intent intent1 = new Intent (activity, CompanyListActivity.class);
+                    activity.startActivity (intent1);
+                    activity.overridePendingTransition (R.anim.slide_in_right, R.anim.slide_out_left);
+                    break;
+                case 2:
+                    Intent intent2 = new Intent (activity, ShopOnlineActivity.class);
+                    activity.startActivity (intent2);
                     activity.overridePendingTransition (R.anim.slide_in_right, R.anim.slide_out_left);
                     break;
             }

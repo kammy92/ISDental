@@ -41,6 +41,18 @@
             android:screenOrientation="portrait">
         </activity>
 
+        <activity android:name="com.actiknow.isdental.activity.ShopOnlineActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name="com.actiknow.isdental.activity.CompanyListActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity android:name="com.actiknow.isdental.activity.BrandContactDetailsActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
 
         <service android:name="com.actiknow.isdental.service.MyFirebaseMessagingService">
             <intent-filter>

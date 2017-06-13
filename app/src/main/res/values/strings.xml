@@ -44,7 +44,8 @@
 
     <string name="activity_event_detail_title">EVENT DETAIL</string>
 
-    <string name="activity_exhibitor_detail_title">EXHIBITOR DETAIL</string>
+    <string name="activity_shop_online_title">SHOP ONLINE</string>
+    <string name="activity_brands_contact_details_title">BRANDS CONTACT DETAILS</string>
 
     <string name="activity_session_detail_title">SESSION DETAIL</string>
 

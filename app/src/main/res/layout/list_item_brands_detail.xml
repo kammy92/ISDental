@@ -22,7 +22,7 @@
                 android:id="@+id/ivContactPerson"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_margin_small"
+                android:padding="@dimen/activity_margin_extra_small"
                 android:src="@drawable/ic_person" />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:id="@+id/ivPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_margin_small"
+                android:padding="@dimen/activity_margin_extra_small"
                 android:src="@drawable/ic_phone" />
 
             <LinearLayout
@@ -77,7 +77,7 @@
                 android:id="@+id/ivEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_margin_small"
+                android:padding="@dimen/activity_margin_extra_small"
                 android:src="@drawable/ic_email" />
 
             <TextView
@@ -105,7 +105,7 @@
                 android:id="@+id/ivWebsite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_margin_small"
+                android:padding="@dimen/activity_margin_extra_small"
                 android:src="@drawable/ic_website" />
 
             <TextView
@@ -132,7 +132,7 @@
                 android:id="@+id/ivLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/activity_margin_small"
+                android:padding="@dimen/activity_margin_extra_small"
                 android:src="@drawable/ic_location" />
 
 
@@ -140,7 +140,6 @@
                 android:id="@+id/tvFullAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tvExhibitorName"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/ivLocation"
                 android:layout_toRightOf="@+id/ivLocation"
