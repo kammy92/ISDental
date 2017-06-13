@@ -1,19 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/clMain"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.actiknow.isdental.MainActivity">
+    android:animateLayoutChanges="true"
+    android:background="@color/app_background">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:visibility="gone">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar1"
+                style="@style/Widget.MyApp.ActionBar"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:background="@color/colorPrimary"
+                android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+                android:visibility="gone"/>
+        </android.support.design.widget.AppBarLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/appBar"
+            android:layout_centerInParent="true"
+            android:animateLayoutChanges="true">
+            <com.daimajia.slider.library.SliderLayout
+                android:id="@+id/slider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/home_slider_height"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                app:auto_cycle="true"
+                app:pager_animation="Accordion"
+                app:pager_animation_span="500"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+            <com.daimajia.slider.library.Indicators.PagerIndicator
+                android:id="@+id/custom_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/slider"
+                android:gravity="center"/>
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/logo_height"
+                android:layout_margin="@dimen/activity_margin"
+                android:src="@drawable/famdent_logo"
+                android:visibility="gone"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/activity_margin"
+                android:background="@drawable/button_bg"
+                android:padding="@dimen/activity_margin_small"
+                android:visibility="gone">
+                <ImageView
+                    android:id="@+id/ivVisitorCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_visitor_card"/>
 
-</android.support.constraint.ConstraintLayout>
+            </RelativeLayout>
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/custom_indicator"
+                android:background="@color/divider_color">
+            </View>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvHomeServiceList"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_above="@+id/view2"
+                android:layout_below="@+id/view"
+                android:fillViewport="true"
+                android:overScrollMode="never" android:scrollbarStyle="insideOverlay"/>
+
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@+id/rlFooter"
+                android:background="@color/divider_color">
+            </View>
+            <RelativeLayout
+                android:id="@+id/rlFooter"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/indiasupply_logo_height"
+                android:layout_alignParentBottom="true">
+
+
+                <TextView
+                    android:id="@+id/tvRefreshData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:drawableLeft="@drawable/ic_refresh"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/activity_margin_small"
+                    android:paddingRight="@dimen/activity_margin_small"
+                    android:text="Refresh Data"
+                    android:textColor="@color/app_text_color_dark"
+                />
+
+                <ImageView
+                    android:id="@+id/ivIndiaSupplyLogo"
+                    android:layout_width="@dimen/indiasupply_logo_width"
+                    android:layout_height="@dimen/indiasupply_logo_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/activity_margin_small"
+                    android:layout_marginLeft="@dimen/activity_margin_small"
+                    android:layout_marginRight="@dimen/activity_margin_small"
+                    android:layout_marginStart="@dimen/activity_margin_small"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/indiasupply_logo"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/ivIndiaSupplyLogo"
+                    android:layout_marginBottom="@dimen/activity_margin_small"
+                    android:layout_toLeftOf="@+id/ivIndiaSupplyLogo"
+                    android:layout_toStartOf="@+id/ivIndiaSupplyLogo"
+                    android:text="@string/activity_main_text_powered_by"
+                    android:textColor="@color/app_text_color_dark"
+                    android:textSize="@dimen/text_size_small"
+                    android:textStyle="italic"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>
