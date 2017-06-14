@@ -21,6 +21,7 @@ public class AppConfigTags {
     public static final String MESSAGE = "message";
     public static final String DATABASE_LOG = "DATABASE LOG";
     public static final String HEADER_API_KEY = "api-key";
+    public static final String USER_LOGIN_KEY = "user-login-key";
     public static final String HEADER_VISITOR_LOGIN_KEY = "visitor-login-key";
 
     public static final String MESSAGE_TEXT = "Message Text";
@@ -35,10 +36,18 @@ public class AppConfigTags {
 
     // blood bank tags
 
-    public static final String COMPANY="";
-    public static final String COMPANY_ID="";
-    public static final String COMPANY_NAME="";
-    public static final String COMPANY_DESCRIPTION="";
+    public static final String COMPANY="companies";
+    public static final String COMPANY_ID="company_id";
+    public static final String COMPANY_NAME="company_name";
+    public static final String COMPANY_DESCRIPTION="company_description";
+    public static final String COMPANY_WEBSITE="company_website";
+
+    public static final String BRAND_CONTACT_NAME="";
+    public static final String BRAND_CONTACT_EMAIL="";
+    public static final String BRAND_CONTACT_WEBSITE="";
+    public static final String BRAND_CONTACT_ADDRESS="";
+    public static final String BRAND_CONTACT_NUMBERS="";
+    public static final String BRAND_CONTACT_ID="";
 
 
 

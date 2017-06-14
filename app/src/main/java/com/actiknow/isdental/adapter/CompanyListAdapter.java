@@ -17,6 +17,7 @@ import com.actiknow.isdental.R;
 import com.actiknow.isdental.activity.BrandContactDetailsActivity;
 import com.actiknow.isdental.model.Company;
 import com.actiknow.isdental.model.StallDetail;
+import com.actiknow.isdental.utils.AppConfigTags;
 import com.actiknow.isdental.utils.SetTypeFace;
 
 import java.util.ArrayList;
@@ -26,11 +27,11 @@ import java.util.List;
 public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.ViewHolder> {
     OnItemClickListener mItemClickListener;
     private Activity activity;
-    private List<Company> BrandList = new ArrayList<Company> ();
+    private List<Company> CompanyList = new ArrayList<Company> ();
 
-    public CompanyListAdapter(Activity activity, List<Company> BrandList) {
+    public CompanyListAdapter(Activity activity, List<Company> CompanyList) {
         this.activity = activity;
-        this.BrandList = BrandList;
+        this.CompanyList = CompanyList;
     }
 
     @Override
@@ -42,8 +43,8 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
     @Override
     public void onBindViewHolder (ViewHolder holder, int position) {//        runEnterAnimation (holder.itemView);
-        final Company Brand = BrandList.get (position);
-        List<StallDetail> stallDetails = Brand.getStallDetailList ();
+        final Company company = CompanyList.get (position);
+        List<StallDetail> stallDetails = company.getStallDetailList ();
 
         holder.llStallDetails.removeAllViews ();
         for (int i = 0; i < stallDetails.size (); i++) {
@@ -58,10 +59,10 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
         holder.tvBrandName.setTypeface (SetTypeFace.getTypeface (activity));
         holder.tvBrandDescription.setTypeface (SetTypeFace.getTypeface (activity));
-        holder.tvBrandName.setText (Brand.getBrand_name ());
-        if (Brand.getBrand_description ().length () > 0) {
+        holder.tvBrandName.setText (company.getBrand_name ());
+        if (company.getBrand_description ().length () > 0) {
             holder.rlMain.setBackgroundColor (activity.getResources ().getColor (R.color.text_color_orange));
-            holder.tvBrandDescription.setText (Brand.getBrand_description ());
+            holder.tvBrandDescription.setText (company.getBrand_description ());
             holder.tvBrandDescription.setVisibility (View.VISIBLE);
         } else {
             holder.rlMain.setBackgroundColor (activity.getResources ().getColor (R.color.app_background));
@@ -71,7 +72,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
     @Override
     public int getItemCount () {
-        return BrandList.size ();
+        return CompanyList.size ();
     }
 
     public void SetOnItemClickListener (final OnItemClickListener mItemClickListener) {
@@ -102,8 +103,9 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         @Override
         public void onClick (View v) {
 
-            Company Brand = BrandList.get (getLayoutPosition ());
+            Company company = CompanyList.get (getLayoutPosition ());
             Intent intent = new Intent (activity, BrandContactDetailsActivity.class);
+            intent.putExtra (AppConfigTags.COMPANY_ID, company.getId ());
             activity.startActivity (intent);
             activity.overridePendingTransition (R.anim.slide_in_right, R.anim.slide_out_left);
 

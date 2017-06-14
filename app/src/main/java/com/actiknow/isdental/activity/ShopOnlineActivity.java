@@ -39,7 +39,7 @@ public class ShopOnlineActivity extends AppCompatActivity {
     }
     private void initData() {
         progressDialog = new ProgressDialog (ShopOnlineActivity.this);
-        Utils.showProgressDialog (progressDialog, getResources ().getString (R.string.progress_dialog_text_please_wait), false);
+        Utils.showProgressDialog (progressDialog, getResources ().getString (R.string.progress_dialog_text_please_wait), true);
         getWebView();
     }
     private void initListener () {
@@ -53,7 +53,7 @@ public class ShopOnlineActivity extends AppCompatActivity {
     }
 
     private void getWebView() {
-        Utils.showProgressDialog (progressDialog, getResources ().getString (R.string.progress_dialog_text_please_wait), true);
+        Utils.showProgressDialog (progressDialog, getResources ().getString (R.string.progress_dialog_text_please_wait), false);
 
         htmlWebView.setWebViewClient(new CustomWebViewClient());
         WebSettings webSetting = htmlWebView.getSettings();

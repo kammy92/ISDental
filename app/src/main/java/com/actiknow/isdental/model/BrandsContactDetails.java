@@ -11,6 +11,10 @@ public class BrandsContactDetails {
     String contact_person, address, email, website;
     ArrayList<String> contactList = new ArrayList<> ();
 
+    public  BrandsContactDetails(){
+
+    }
+
     public BrandsContactDetails(int id, String contact_person, String address, String email, String website, ArrayList<String> contactList) {
         this.id = id;
         this.contact_person = contact_person;

@@ -89,6 +89,7 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
         initView ();
         initData ();
         initListener ();
+        getCompanyList();
 //        getBrandList ();
         initSlider ();
 //        setUpNavigationDrawer ();
@@ -127,13 +128,13 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
 //        dialog = Utils.showBigBannerDialog (this);
         category = new String[] {"Air Abrasion", "Curing Lights", "Disposable Needles"};//        swipeRefreshLayout.setRefreshing (true);
 
-        companyList.add (new Company(1, "http://seeklogo.com/images/1/3M-logo-079FB52BC8-seeklogo.com.png", "3M ESPE", "Hall 1"));
-        companyList.add (new Company(2, "http://mudrsoc.com/wp-content/uploads/2017/01/Dentsply-Logo-Black.jpg", "DENTSPLY SIRONA", "Hall 1"));
-        companyList.add (new Company(3, "http://www.cldental.com.au/mobile/images/equipment/compressors/durrlogo.jpg", "DUERR DENTEL INDIA", "Hall 1"));
-        companyList.add (new Company(4, "", "UNICORN DENMART", "Hall 1"));
-        companyList.add (new Company(5, "", "CAPRI", "Hall 1"));
-        companyList.add (new Company(6, "", "ACETON INDIA", "Hall 1"));
-        companyList.add (new Company(7, "", "SKANRAY TECHNOLOGY", "Hall 1"));
+      //  companyList.add (new Company(1, "http://seeklogo.com/images/1/3M-logo-079FB52BC8-seeklogo.com.png", "3M ESPE", "Hall 1"));
+     //   companyList.add (new Company(2, "http://mudrsoc.com/wp-content/uploads/2017/01/Dentsply-Logo-Black.jpg", "DENTSPLY SIRONA", "Hall 1"));
+     //   companyList.add (new Company(3, "http://www.cldental.com.au/mobile/images/equipment/compressors/durrlogo.jpg", "DUERR DENTEL INDIA", "Hall 1"));
+      //  companyList.add (new Company(4, "", "UNICORN DENMART", "Hall 1"));
+      //  companyList.add (new Company(5, "", "CAPRI", "Hall 1"));
+       // companyList.add (new Company(6, "", "ACETON INDIA", "Hall 1"));
+      //  companyList.add (new Company(7, "", "SKANRAY TECHNOLOGY", "Hall 1"));
 
         bannerlist.add(new Banner(1, "Title 2", "http://famdent.indiasupply.com//api/images/banners/chesa1.jpg", "SMALL", "www.famdent.indiasupply.com/stall_new/Brands.php?id=CHESA%20DENTAL%20CARE"));
         bannerlist.add(new Banner(2, "Title 2", "http://famdent.indiasupply.com//api/images/banners/chesa2.jpg", "SMALL", "www.famdent.indiasupply.com/stall_new/Brands.php?id=CHESA%20DENTAL%20CARE"));
@@ -144,12 +145,7 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
 
 
         // swipeRefreshLayout.setColorSchemeColors (getResources ().getColor (R.color.colorPrimaryDark));
-        companyListAdapter = new CompanyListAdapter(this, companyList);
-        rvBrandList.setAdapter (companyListAdapter);
-        rvBrandList.setHasFixedSize (true);
-        rvBrandList.setLayoutManager (new LinearLayoutManager (this, LinearLayoutManager.VERTICAL, false));
-        rvBrandList.addItemDecoration (new SimpleDividerItemDecoration (this));
-        rvBrandList.setItemAnimator (new DefaultItemAnimator ());
+
 
         searchView.setQueryHint (Html.fromHtml ("<font color = #ffffff>" + "Search" + "</font>"));
     }
@@ -386,13 +382,18 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
                                         for (int i = 0; i < jsonArrayBrand.length (); i++) {
                                             JSONObject jsonObjectBrand = jsonArrayBrand.getJSONObject (i);
                                             Company company = new Company(
-                                                    jsonObjectBrand.getInt (AppConfigTags.COMPANY_ID),
+                                                    jsonObjectBrand.getInt (AppConfigTags.COMPANY_ID),"",
                                                     jsonObjectBrand.getString (AppConfigTags.COMPANY_NAME),
-                                                    jsonObjectBrand.getString (AppConfigTags.COMPANY_DESCRIPTION), "");
+                                                    jsonObjectBrand.getString (AppConfigTags.COMPANY_DESCRIPTION));
 
 
                                             companyList.add (i, company);
-                                           // CompanyListAdapter.notifyDataSetChanged ();
+                                            companyListAdapter = new CompanyListAdapter(CompanyListActivity.this, companyList);
+                                            rvBrandList.setAdapter (companyListAdapter);
+                                            rvBrandList.setHasFixedSize (true);
+                                            rvBrandList.setLayoutManager (new LinearLayoutManager (CompanyListActivity.this, LinearLayoutManager.VERTICAL, false));
+                                            rvBrandList.addItemDecoration (new SimpleDividerItemDecoration (CompanyListActivity.this));
+                                            rvBrandList.setItemAnimator (new DefaultItemAnimator ());
 
                                         }
 
@@ -444,7 +445,7 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
                     Map<String, String> params = new HashMap<> ();
                     VisitorDetailsPref visitorDetailsPref = VisitorDetailsPref.getInstance ();
                     params.put (AppConfigTags.HEADER_API_KEY, Constants.api_key);
-                    params.put (AppConfigTags.HEADER_VISITOR_LOGIN_KEY, visitorDetailsPref.getStringPref (CompanyListActivity.this, visitorDetailsPref.VISITOR_LOGIN_KEY));
+                    params.put (AppConfigTags.USER_LOGIN_KEY, Constants.login_key);
                     Utils.showLog (Log.INFO, AppConfigTags.HEADERS_SENT_TO_THE_SERVER, "" + params, false);
                     return params;
                 }
