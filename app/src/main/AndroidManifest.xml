@@ -49,8 +49,8 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name="com.actiknow.isdental.activity.BrandContactDetailsActivity"
-            android:screenOrientation="portrait">
+        <activity android:name="com.actiknow.isdental.activity.CompanyDetailsActivity"
+                  android:screenOrientation="portrait">
         </activity>
 
 
@@ -75,7 +75,9 @@
         </receiver>
 
 
-
+        <meta-data
+            android:name="com.bugsnag.android.API_KEY"
+            android:value="b2b4c756b3b88a72891033fa275309db"/>
 
     </application>
 

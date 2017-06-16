@@ -3,34 +3,35 @@ package com.actiknow.isdental.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actiknow.isdental.R;
-
 import com.actiknow.isdental.adapter.CompanyListAdapter;
+import com.actiknow.isdental.helper.DatabaseHandler;
 import com.actiknow.isdental.model.Banner;
 import com.actiknow.isdental.model.Company;
-import com.actiknow.isdental.model.StallDetail;
 import com.actiknow.isdental.utils.AppConfigTags;
 import com.actiknow.isdental.utils.AppConfigURL;
 import com.actiknow.isdental.utils.Constants;
+import com.actiknow.isdental.utils.CustomImageSlider;
 import com.actiknow.isdental.utils.NetworkConnection;
 import com.actiknow.isdental.utils.SimpleDividerItemDecoration;
-import com.actiknow.isdental.utils.TypefaceSpan;
+import com.actiknow.isdental.utils.UserDetailsPref;
 import com.actiknow.isdental.utils.Utils;
-import com.actiknow.isdental.utils.VisitorDetailsPref;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -38,14 +39,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -55,111 +53,152 @@ import java.util.List;
 import java.util.Map;
 
 
-public class CompanyListActivity extends AppCompatActivity implements ViewPagerEx.OnPageChangeListener, BaseSliderView.OnSliderClickListener {
+public class CompanyListActivity extends AppCompatActivity {
     RecyclerView rvBrandList;
-    ImageView ivBack;
-    //    SwipeRefreshLayout swipeRefreshLayout;
+    RelativeLayout rlBack;
+    SwipeRefreshLayout swipeRefreshLayout;
     List<Company> companyList = new ArrayList<> ();
-    List<Company> tempBrandList = new ArrayList<> ();
+    List<Company> tempCompanyList = new ArrayList<> ();
     CompanyListAdapter companyListAdapter;
     String[] category;
-    List<Banner> bannerlist = new ArrayList<>();
+    List<Banner> bannerlist = new ArrayList<> ();
     ImageView ivFilter;
     ImageView ivSort;
     TextView tvTitle;
     SearchView searchView;
-
+    
+    CoordinatorLayout clMain;
     TextView tvNoResult;
-
-    List<StallDetail> stallDetailList = new ArrayList<> ();
-
+    
+    
     String filterCategory = "";
     String filterSubCategory = "";
 
 //    Dialog dialog;
-
-    private Toolbar toolbar;
+DatabaseHandler db;
     private SliderLayout slider;
-
-
+    
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
-        setContentView (R.layout.activity_brand_list);
+        setContentView (R.layout.activity_company_list);
         initView ();
         initData ();
         initListener ();
-        getCompanyList();
-//        getBrandList ();
+        getCompanyList ();
         initSlider ();
-//        setUpNavigationDrawer ();
-   //     getOfflineBrandList ();
     }
-
-    /*private void getOfflineBrandList () {
-        Utils.showLog (Log.DEBUG, AppConfigTags.TAG, "Getting all the Brands from local database", true);
-        companyList.clear ();
-        ArrayList<Company> offlineBrand = db.getAllBrandList ();
-        for (Company Company : offlineBrand)
-            companyList.add (Company);
-        CompanyListAdapter.notifyDataSetChanged ();
-//        swipeRefreshLayout.setRefreshing (false);
-    }*/
-
+    
     private void initView () {
+        clMain = (CoordinatorLayout) findViewById (R.id.clMain);
         rvBrandList = (RecyclerView) findViewById (R.id.rvBrandList);
-        ivBack = (ImageView) findViewById (R.id.ivBack);
+        rlBack = (RelativeLayout) findViewById (R.id.rlBack);
         ivFilter = (ImageView) findViewById (R.id.ivFilter);
         tvNoResult = (TextView) findViewById (R.id.tvNoResult);
-
+        
         ivSort = (ImageView) findViewById (R.id.ivSort);
         tvTitle = (TextView) findViewById (R.id.tvTitle);
         searchView = (SearchView) findViewById (R.id.searchView);
-//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById (swipeRefreshLayout);
-        Utils.setTypefaceToAllViews (this, rvBrandList);
-
-        toolbar = (Toolbar) findViewById (R.id.toolbar1);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById (R.id.swipeRefreshLayout);
+        Utils.setTypefaceToAllViews (this, tvTitle);
+        
         slider = (SliderLayout) findViewById (R.id.slider);
-
     }
-
+    
     private void initData () {
-      //  db = new DatabaseHandler (getApplicationContext ());
-//        dialog = Utils.showBigBannerDialog (this);
-        category = new String[] {"Air Abrasion", "Curing Lights", "Disposable Needles"};//        swipeRefreshLayout.setRefreshing (true);
-
-      //  companyList.add (new Company(1, "http://seeklogo.com/images/1/3M-logo-079FB52BC8-seeklogo.com.png", "3M ESPE", "Hall 1"));
-     //   companyList.add (new Company(2, "http://mudrsoc.com/wp-content/uploads/2017/01/Dentsply-Logo-Black.jpg", "DENTSPLY SIRONA", "Hall 1"));
-     //   companyList.add (new Company(3, "http://www.cldental.com.au/mobile/images/equipment/compressors/durrlogo.jpg", "DUERR DENTEL INDIA", "Hall 1"));
-      //  companyList.add (new Company(4, "", "UNICORN DENMART", "Hall 1"));
-      //  companyList.add (new Company(5, "", "CAPRI", "Hall 1"));
-       // companyList.add (new Company(6, "", "ACETON INDIA", "Hall 1"));
-      //  companyList.add (new Company(7, "", "SKANRAY TECHNOLOGY", "Hall 1"));
-
-        bannerlist.add(new Banner(1, "Title 2", "http://famdent.indiasupply.com//api/images/banners/chesa1.jpg", "SMALL", "www.famdent.indiasupply.com/stall_new/Brands.php?id=CHESA%20DENTAL%20CARE"));
-        bannerlist.add(new Banner(2, "Title 2", "http://famdent.indiasupply.com//api/images/banners/chesa2.jpg", "SMALL", "www.famdent.indiasupply.com/stall_new/Brands.php?id=CHESA%20DENTAL%20CARE"));
-        bannerlist.add(new Banner(3, "Title 2", "http://famdent.indiasupply.com//api/images/banners/chesa3.jpg", "SMALL", "www.famdent.indiasupply.com/stall_new/Brands.php?id=CHESA%20DENTAL%20CARE"));
-        bannerlist.add(new Banner(4, "Title 2", "http://famdent.indiasupply.com//api/images/banners/chesa4.jpg", "SMALL", "www.famdent.indiasupply.com/stall_new/Brands.php?id=CHESA%20DENTAL%20CARE"));
-        bannerlist.add(new Banner(5, "Title 2", "http://famdent.indiasupply.com//api/images/banners/haitech1.jpg", "SMALL", "www.famdent.indiasupply.com/stall_new/Brands.php?id=HAITECH%20MEDICAL%20SOLUTIONS%20PVT%20LTD"));
-        bannerlist.add(new Banner(6, "Title 2", "http://famdent.indiasupply.com//api/images/banners/haitech2.jpg", "SMALL", "www.famdent.indiasupply.com/stall_new/Brands.php?id=HAITECH%20MEDICAL%20SOLUTIONS%20PVT%20LTD"));
-
-
-        // swipeRefreshLayout.setColorSchemeColors (getResources ().getColor (R.color.colorPrimaryDark));
-
-
+        db = new DatabaseHandler (getApplicationContext ());
+        swipeRefreshLayout.setRefreshing (true);
+        
+        swipeRefreshLayout.setColorSchemeColors (getResources ().getColor (R.color.colorPrimaryDark));
+        
         searchView.setQueryHint (Html.fromHtml ("<font color = #ffffff>" + "Search" + "</font>"));
+        
+        companyListAdapter = new CompanyListAdapter (CompanyListActivity.this, companyList);
+        rvBrandList.setAdapter (companyListAdapter);
+        rvBrandList.setHasFixedSize (true);
+        rvBrandList.setLayoutManager (new LinearLayoutManager (CompanyListActivity.this, LinearLayoutManager.VERTICAL, false));
+        rvBrandList.addItemDecoration (new SimpleDividerItemDecoration (CompanyListActivity.this));
+        rvBrandList.setItemAnimator (new DefaultItemAnimator ());
     }
+    
+    private void initSlider () {
+        slider.removeAllSliders ();
+        for (int i = 0; i < db.getAllBrandsBanners ().size (); i++) {
+            final Banner banner = db.getAllBrandsBanners ().get (i);
+            CustomImageSlider slider2 = new CustomImageSlider (this);
+            slider2
+                    .image (banner.getImage ())
+                    .setScaleType (BaseSliderView.ScaleType.CenterCrop)
+                    .setOnSliderClickListener (new BaseSliderView.OnSliderClickListener () {
+                        @Override
+                        public void onSliderClick (BaseSliderView slider) {
+                            Uri uri;
+                            if (banner.getUrl ().contains ("http://") || banner.getUrl ().contains ("https://")) {
+                                uri = Uri.parse (banner.getUrl ());
+                            } else {
+                                uri = Uri.parse ("http://" + banner.getUrl ());
+                            }
+                            Intent intent = new Intent (Intent.ACTION_VIEW, uri);
+                            startActivity (intent);
+                        }
+                    });
 
+//            DefaultSliderView defaultSliderView = new DefaultSliderView (activity);
+//            defaultSliderView
+//                    .image (image)
+//                    .setScaleType (BaseSliderView.ScaleType.Fit)
+//                    .setOnSliderClickListener (new BaseSliderView.OnSliderClickListener () {
+//                        @Override
+//                        public void onSliderClick (BaseSliderView slider) {
+//                            Intent intent = new Intent (activity, PropertyDetailActivity.class);
+//                            intent.putExtra (AppConfigTags.PROPERTY_ID, property.getId ());
+//                            activity.startActivity (intent);
+//                            activity.overridePendingTransition (R.anim.slide_in_right, R.anim.slide_out_left);
+//                        }
+//                    });
+//
+//            defaultSliderView.bundle (new Bundle ());
+            // defaultSliderView.getBundle ().putString ("extra", String.valueOf (s));
+//            holder.slider.addSlider (defaultSliderView);
+            slider.addSlider (slider2);
+        }
+        slider.getPagerIndicator ().setVisibility (View.GONE);
+        slider.setPresetTransformer (SliderLayout.Transformer.Default);
+        slider.setCustomAnimation (new DescriptionAnimation ());
+        slider.setDuration (5000);
+        slider.addOnPageChangeListener (new ViewPagerEx.OnPageChangeListener () {
+            @Override
+            public void onPageScrolled (int position, float positionOffset, int positionOffsetPixels) {
+            }
+            
+            @Override
+            public void onPageSelected (int position) {
+            }
+            
+            @Override
+            public void onPageScrollStateChanged (int state) {
+                switch (state) {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+        });
+        slider.setPresetIndicator (SliderLayout.PresetIndicators.Center_Bottom);
+    }
+    
     private void initListener () {
-//        swipeRefreshLayout.setOnRefreshListener (new SwipeRefreshLayout.OnRefreshListener () {
-//            @Override
-//            public void onRefresh () {
-//                swipeRefreshLayout.setRefreshing (true);
-//                getOfflineBrandList ();
-//                getBrandList ();
-//            }
-//        });
-        ivBack.setOnClickListener (new View.OnClickListener () {
+        swipeRefreshLayout.setOnRefreshListener (new SwipeRefreshLayout.OnRefreshListener () {
+            @Override
+            public void onRefresh () {
+                swipeRefreshLayout.setRefreshing (true);
+                getCompanyList ();
+            }
+        });
+        rlBack.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick (View v) {
                 finish ();
@@ -167,7 +206,8 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
             }
         });
 
-     /*   ivFilter.setOnClickListener (new View.OnClickListener () {
+     /*
+        ivFilter.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick (View view) {
                 new MaterialDialog.Builder (CompanyListActivity.this)
@@ -239,7 +279,6 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
                             }
                         })
                         .show ();
-
     /*
 
                 boolean wrapInScrollView = true;
@@ -281,39 +320,37 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
                 */
          /*   }
         });*/
-
-     /*   searchView.setOnSearchClickListener (new View.OnClickListener () {
+    
+        searchView.setOnSearchClickListener (new View.OnClickListener () {
             @Override
             public void onClick (View v) {
 //                Toast.makeText (CompanyListActivity.this, "karman open", Toast.LENGTH_SHORT).show ();
 //                ivFilter.setVisibility (View.GONE);
-                ivBack.setVisibility (View.GONE);
+                rlBack.setVisibility (View.GONE);
 //                ivSort.setVisibility (View.GONE);
                 tvTitle.setVisibility (View.GONE);
             }
         });
-
+    
         searchView.setOnQueryTextListener (new SearchView.OnQueryTextListener () {
             @Override
             public boolean onQueryTextSubmit (String query) {
                 return true;
             }
-
+        
             @Override
             public boolean onQueryTextChange (String newText) {
-                tempBrandList.clear ();
-                for (Company Company : companyList) {
-                    List<StallDetail> tempStallDetailList = Company.getStallDetailList ();
-                    StallDetail stallDetail = tempStallDetailList.get (0);
-                    if (Company.getBrand_name ().toUpperCase ().contains (newText.toUpperCase ()) ||
-                            Company.getBrand_name ().toLowerCase ().contains (newText.toLowerCase ()) ||
-                            stallDetail.getStall_number ().toLowerCase ().contains (newText.toLowerCase ()) ||
-                            stallDetail.getStall_number ().toUpperCase ().contains (newText.toUpperCase ())) {
-                        tempBrandList.add (Company);
+                tempCompanyList.clear ();
+                for (Company company : companyList) {
+                    if (company.getName ().toUpperCase ().contains (newText.toUpperCase ()) ||
+                            company.getName ().toLowerCase ().contains (newText.toLowerCase ()) ||
+                            company.getBrands ().toLowerCase ().contains (newText.toLowerCase ()) ||
+                            company.getBrands ().toUpperCase ().contains (newText.toUpperCase ())) {
+                        tempCompanyList.add (company);
                     }
                 }
-                CompanyListAdapter = new CompanyListAdapter (CompanyListActivity.this, tempBrandList);
-                rvBrandList.setAdapter (CompanyListAdapter);
+                companyListAdapter = new CompanyListAdapter (CompanyListActivity.this, tempCompanyList);
+                rvBrandList.setAdapter (companyListAdapter);
                 rvBrandList.setHasFixedSize (true);
                 rvBrandList.setLayoutManager (new LinearLayoutManager (CompanyListActivity.this, LinearLayoutManager.VERTICAL, false));
                 rvBrandList.addItemDecoration (new SimpleDividerItemDecoration (CompanyListActivity.this));
@@ -321,48 +358,21 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
                 return true;
             }
         });
-
+    
         searchView.setOnCloseListener (new SearchView.OnCloseListener () {
             @Override
             public boolean onClose () {
 //                Toast.makeText (CompanyListActivity.this, "karman close", Toast.LENGTH_SHORT).show ();
 //                ivFilter.setVisibility (View.VISIBLE);
-                ivBack.setVisibility (View.VISIBLE);
+                rlBack.setVisibility (View.VISIBLE);
 //                ivSort.setVisibility (View.VISIBLE);
                 tvTitle.setVisibility (View.VISIBLE);
                 return false;
             }
-        });*/
+        });
     }
-
-    private void initSlider () {
-        for (int i = 0; i < bannerlist.size (); i++) {
-            Banner banner = bannerlist.get (i);
-            SpannableString s = new SpannableString (banner.getTitle ());
-            s.setSpan (new TypefaceSpan (this, Constants.font_name), 0, s.length (), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            DefaultSliderView defaultSliderView = new DefaultSliderView (this);
-            defaultSliderView
-                    .image (banner.getImage ())
-                    .setScaleType (BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener (this);
-
-            defaultSliderView.bundle (new Bundle ());
-            defaultSliderView.getBundle ().putString ("url", banner.getUrl ());
-            slider.addSlider (defaultSliderView);
-        }
-
-        slider.setIndicatorVisibility (PagerIndicator.IndicatorVisibility.Visible);
-        slider.setPresetTransformer (SliderLayout.Transformer.Default);
-        slider.setCustomAnimation (new DescriptionAnimation ());
-        slider.setDuration (5000);
-        slider.addOnPageChangeListener (this);
-        slider.setCustomIndicator ((PagerIndicator) findViewById (R.id.custom_indicator));
-        slider.setPresetIndicator (SliderLayout.PresetIndicators.Center_Bottom);
-    }
-
-
-   private void getCompanyList () {
+    
+    private void getCompanyList () {
         if (NetworkConnection.isNetworkAvailable (this)) {
             tvNoResult.setVisibility (View.GONE);
             Utils.showLog (Log.INFO, AppConfigTags.URL, AppConfigURL.URL_COMPANY_LIST, true);
@@ -381,42 +391,36 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
                                         JSONArray jsonArrayBrand = jsonObj.getJSONArray (AppConfigTags.COMPANY);
                                         for (int i = 0; i < jsonArrayBrand.length (); i++) {
                                             JSONObject jsonObjectBrand = jsonArrayBrand.getJSONObject (i);
-                                            Company company = new Company(
-                                                    jsonObjectBrand.getInt (AppConfigTags.COMPANY_ID),"",
+                                            Company company = new Company (
+                                                    jsonObjectBrand.getInt (AppConfigTags.COMPANY_ID), "",
                                                     jsonObjectBrand.getString (AppConfigTags.COMPANY_NAME),
-                                                    jsonObjectBrand.getString (AppConfigTags.COMPANY_DESCRIPTION));
-
-
+                                                    jsonObjectBrand.getString (AppConfigTags.COMPANY_DESCRIPTION),
+                                                    jsonObjectBrand.getString (AppConfigTags.COMPANY_BRANDS)
+                                            );
                                             companyList.add (i, company);
-                                            companyListAdapter = new CompanyListAdapter(CompanyListActivity.this, companyList);
-                                            rvBrandList.setAdapter (companyListAdapter);
-                                            rvBrandList.setHasFixedSize (true);
-                                            rvBrandList.setLayoutManager (new LinearLayoutManager (CompanyListActivity.this, LinearLayoutManager.VERTICAL, false));
-                                            rvBrandList.addItemDecoration (new SimpleDividerItemDecoration (CompanyListActivity.this));
-                                            rvBrandList.setItemAnimator (new DefaultItemAnimator ());
-
+    
                                         }
-
-                                        if (jsonArrayBrand.length () > 0) {
-//                                            swipeRefreshLayout.setRefreshing (false);
-                                        } else {
-//                                            swipeRefreshLayout.setRefreshing (false);
+                                        companyListAdapter.notifyDataSetChanged ();
+                                        if (jsonArrayBrand.length () == 0) {
                                             tvNoResult.setVisibility (View.VISIBLE);
                                         }
                                     } else {
-//                                        swipeRefreshLayout.setRefreshing (false);
                                         tvNoResult.setVisibility (View.VISIBLE);
+                                        Utils.showSnackBar (CompanyListActivity.this, clMain, message, Snackbar.LENGTH_LONG, null, null);
                                     }
-                                } catch (JSONException e) {
+                                    swipeRefreshLayout.setRefreshing (false);
+                                } catch (Exception e) {
+                                    swipeRefreshLayout.setRefreshing (false);
                                     e.printStackTrace ();
-//                                    swipeRefreshLayout.setRefreshing (false);
+                                    Utils.showSnackBar (CompanyListActivity.this, clMain, getResources ().getString (R.string.snackbar_text_exception_occurred), Snackbar.LENGTH_LONG, getResources ().getString (R.string.snackbar_action_dismiss), null);
                                     tvNoResult.setVisibility (View.VISIBLE);
                                 }
                             } else {
-//                                swipeRefreshLayout.setRefreshing (false);
                                 tvNoResult.setVisibility (View.VISIBLE);
+                                Utils.showSnackBar (CompanyListActivity.this, clMain, getResources ().getString (R.string.snackbar_text_error_occurred), Snackbar.LENGTH_LONG, getResources ().getString (R.string.snackbar_action_dismiss), null);
                                 Utils.showLog (Log.WARN, AppConfigTags.SERVER_RESPONSE, AppConfigTags.DIDNT_RECEIVE_ANY_DATA_FROM_SERVER, true);
                             }
+                            swipeRefreshLayout.setRefreshing (false);
                         }
                     },
                     new Response.ErrorListener () {
@@ -426,9 +430,9 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
                             NetworkResponse response = error.networkResponse;
                             if (response != null && response.data != null) {
                                 Utils.showLog (Log.ERROR, AppConfigTags.ERROR, new String (response.data), true);
-    
                             }
-//                            swipeRefreshLayout.setRefreshing (false);
+                            Utils.showSnackBar (CompanyListActivity.this, clMain, getResources ().getString (R.string.snackbar_text_error_occurred), Snackbar.LENGTH_LONG, getResources ().getString (R.string.snackbar_action_dismiss), null);
+                            swipeRefreshLayout.setRefreshing (false);
                             tvNoResult.setVisibility (View.VISIBLE);
                         }
                     }) {
@@ -443,17 +447,25 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
                 @Override
                 public Map<String, String> getHeaders () throws AuthFailureError {
                     Map<String, String> params = new HashMap<> ();
-                    VisitorDetailsPref visitorDetailsPref = VisitorDetailsPref.getInstance ();
+                    UserDetailsPref userDetailsPref = UserDetailsPref.getInstance ();
                     params.put (AppConfigTags.HEADER_API_KEY, Constants.api_key);
-                    params.put (AppConfigTags.USER_LOGIN_KEY, Constants.login_key);
+                    params.put (AppConfigTags.HEADER_USER_LOGIN_KEY, Constants.login_key);
                     Utils.showLog (Log.INFO, AppConfigTags.HEADERS_SENT_TO_THE_SERVER, "" + params, false);
                     return params;
                 }
             };
             Utils.sendRequest (strRequest, 5);
         } else {
-//            swipeRefreshLayout.setRefreshing (false);
             tvNoResult.setVisibility (View.VISIBLE);
+            swipeRefreshLayout.setRefreshing (false);
+            Utils.showSnackBar (this, clMain, getResources ().getString (R.string.snackbar_text_no_internet_connection_available), Snackbar.LENGTH_LONG, getResources ().getString (R.string.snackbar_action_go_to_settings), new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    Intent dialogIntent = new Intent (Settings.ACTION_SETTINGS);
+                    dialogIntent.addFlags (Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity (dialogIntent);
+                }
+            });
         }
     }
 
@@ -538,25 +550,6 @@ public class CompanyListActivity extends AppCompatActivity implements ViewPagerE
     public void onBackPressed () {
         finish ();
         overridePendingTransition (R.anim.slide_in_left, R.anim.slide_out_right);
-    }
-    
-    @Override
-    public void onSliderClick (BaseSliderView slider) {
-        Uri uri = Uri.parse ("http://" + slider.getBundle ().get ("url"));
-        Intent intent = new Intent (Intent.ACTION_VIEW, uri);
-        startActivity (intent);
-    }
-    
-    @Override
-    public void onPageScrolled (int position, float positionOffset, int positionOffsetPixels) {
-    }
-    
-    @Override
-    public void onPageSelected (int position) {
-    }
-    
-    @Override
-    public void onPageScrollStateChanged (int state) {
     }
     
     

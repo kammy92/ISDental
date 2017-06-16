@@ -2,6 +2,7 @@ package com.actiknow.isdental.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -12,8 +13,6 @@ import android.widget.ImageView;
 import com.actiknow.isdental.R;
 import com.actiknow.isdental.utils.Utils;
 
-import static com.actiknow.isdental.R.id.ivBack;
-
 /**
  * Created by l on 13/06/2017.
  */
@@ -22,26 +21,35 @@ public class ShopOnlineActivity extends AppCompatActivity {
     WebView htmlWebView;
     ImageView ivBack;
     ProgressDialog progressDialog;
-
+    
     @Override
     protected void onCreate (Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_shop_online);
         initView ();
         initData ();
-        initListener();
-
-
+        initListener ();
     }
-    private void initView() {
-        htmlWebView = (WebView)findViewById(R.id.webView);
-        ivBack=(ImageView)findViewById(R.id.ivBack);
+    
+    private void initView () {
+        htmlWebView = (WebView) findViewById (R.id.webView);
+        ivBack = (ImageView) findViewById (R.id.ivBack);
     }
-    private void initData() {
+    
+    private void initData () {
         progressDialog = new ProgressDialog (ShopOnlineActivity.this);
         Utils.showProgressDialog (progressDialog, getResources ().getString (R.string.progress_dialog_text_please_wait), true);
-        getWebView();
+        final Handler handler = new Handler ();
+        handler.postDelayed (new Runnable () {
+            @Override
+            public void run () {
+                progressDialog.dismiss ();
+            }
+        }, 5000);
+        getWebView ();
+        Utils.setTypefaceToAllViews (this, ivBack);
     }
+    
     private void initListener () {
         ivBack.setOnClickListener (new View.OnClickListener () {
             @Override
@@ -51,27 +59,25 @@ public class ShopOnlineActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void getWebView() {
-        Utils.showProgressDialog (progressDialog, getResources ().getString (R.string.progress_dialog_text_please_wait), false);
-
-        htmlWebView.setWebViewClient(new CustomWebViewClient());
-        WebSettings webSetting = htmlWebView.getSettings();
-        webSetting.setJavaScriptEnabled(true);
-        webSetting.setDisplayZoomControls(true);
-        htmlWebView.loadUrl("https://www.indiasupply.com/");
+    
+    private void getWebView () {
+        htmlWebView.setWebViewClient (new CustomWebViewClient ());
+        WebSettings webSetting = htmlWebView.getSettings ();
+        webSetting.setJavaScriptEnabled (true);
+        webSetting.setDisplayZoomControls (true);
+        htmlWebView.loadUrl ("https://www.indiasupply.com/");
     }
-
+    
     @Override
     public void onBackPressed () {
         finish ();
         overridePendingTransition (R.anim.slide_in_left, R.anim.slide_out_right);
     }
-
+    
     private class CustomWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            view.loadUrl(url);
+        public boolean shouldOverrideUrlLoading (WebView view, String url) {
+            view.loadUrl (url);
             return true;
         }
     }

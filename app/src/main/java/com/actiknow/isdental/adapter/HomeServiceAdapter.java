@@ -2,18 +2,24 @@ package com.actiknow.isdental.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.actiknow.isdental.R;
 import com.actiknow.isdental.activity.CompanyListActivity;
+import com.actiknow.isdental.activity.InformationActivity;
 import com.actiknow.isdental.activity.ShopOnlineActivity;
 import com.actiknow.isdental.model.HomeService;
 import com.actiknow.isdental.utils.SetTypeFace;
+import com.actiknow.isdental.utils.Utils;
 import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +87,15 @@ public class HomeServiceAdapter extends RecyclerView.Adapter<HomeServiceAdapter.
                     activity.startActivity (intent2);
                     activity.overridePendingTransition (R.anim.slide_in_right, R.anim.slide_out_left);
                     break;
+                case 6:
+                    Intent intent3 = new Intent (activity, InformationActivity.class);
+                    activity.startActivity (intent3);
+                    activity.overridePendingTransition (R.anim.slide_in_right, R.anim.slide_out_left);
+                    break;
+                default:
+                    Utils.showSnackBar (activity, (CoordinatorLayout) activity.findViewById (R.id.clMain), "Coming Soon", Snackbar.LENGTH_LONG, null, null);
+                    break;
+                
             }
         }
     }

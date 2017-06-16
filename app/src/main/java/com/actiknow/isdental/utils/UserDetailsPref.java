@@ -4,23 +4,22 @@ package com.actiknow.isdental.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class VisitorDetailsPref {
-    public static String VISITOR_ID = "visitor_id";
-    public static String VISITOR_NAME = "visitor_name";
-    public static String VISITOR_EMAIL = "visitor_email";
-    public static String VISITOR_MOBILE = "visitor_mobile";
-    public static String VISITOR_TYPE = "visitor_type";
-    public static String VISITOR_LOGIN_KEY = "visitor_login_key";
-    public static String VISITOR_FIREBASE_ID = "visitor_firebase_id";
+public class UserDetailsPref {
+    public static String USER_ID = "user_id";
+    public static String USER_NAME = "user_name";
+    public static String USER_EMAIL = "user_email";
+    public static String USER_MOBILE = "user_mobile";
+    public static String USER_TYPE = "user_type";
+    public static String USER_LOGIN_KEY = "user_login_key";
+    public static String USER_FIREBASE_ID = "user_firebase_id";
     public static String LOGGED_IN_SESSION = "logged_in_session";
-    public static String DATABASE_VERSION = "database_version";
-    private static VisitorDetailsPref visitorDetailsPref;
+    private static UserDetailsPref userDetailsPref;
     private String USER_DETAILS = "USER_DETAILS";
-
-    public static VisitorDetailsPref getInstance () {
-        if (visitorDetailsPref == null)
-            visitorDetailsPref = new VisitorDetailsPref();
-        return visitorDetailsPref;
+    
+    public static UserDetailsPref getInstance () {
+        if (userDetailsPref == null)
+            userDetailsPref = new UserDetailsPref ();
+        return userDetailsPref;
     }
 
     private SharedPreferences getPref (Context context) {

@@ -29,6 +29,8 @@
     <dimen name="text_size_medium">16sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_extra_large">20sp</dimen>
+    <dimen name="text_size_company_name">24sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
 
     <dimen name="button_elevation">2dp</dimen>
     <dimen name="cardview_elevation">2dp</dimen>

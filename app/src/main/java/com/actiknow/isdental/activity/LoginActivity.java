@@ -54,11 +54,12 @@ import com.actiknow.isdental.utils.Constants;
 import com.actiknow.isdental.utils.NetworkConnection;
 import com.actiknow.isdental.utils.SetTypeFace;
 import com.actiknow.isdental.utils.TypefaceSpan;
+import com.actiknow.isdental.utils.UserDetailsPref;
 import com.actiknow.isdental.utils.Utils;
-import com.actiknow.isdental.utils.VisitorDetailsPref;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -80,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView tvSubmit;
     CoordinatorLayout clMain;
     ProgressDialog progressDialog;
-    VisitorDetailsPref visitorDetailsPref;
+    UserDetailsPref userDetailsPref;
     ImageView ivIndiaSupplyLogo;
 
     TextView tvTerm;
@@ -104,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initData () {
-        visitorDetailsPref = VisitorDetailsPref.getInstance ();
+        userDetailsPref = UserDetailsPref.getInstance ();
         progressDialog = new ProgressDialog (LoginActivity.this);
         SpinnerAdapter spinnerAdapter = new SpinnerAdapter (this, android.R.layout.simple_list_item_1, user_type);
         spType.setAdapter (spinnerAdapter);
@@ -256,7 +257,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void displayFirebaseRegId () {
-        Utils.showLog (Log.ERROR, "Firebase Reg ID:", visitorDetailsPref.getStringPref (this, VisitorDetailsPref.VISITOR_FIREBASE_ID), true);
+        Utils.showLog (Log.ERROR, "Firebase Reg ID:", userDetailsPref.getStringPref (this, UserDetailsPref.USER_FIREBASE_ID), true);
     }
 
     private void showAutoFillDialog () {
@@ -311,20 +312,19 @@ public class LoginActivity extends AppCompatActivity {
                     new com.android.volley.Response.Listener<String> () {
                         @Override
                         public void onResponse (String response) {
-                            Utils.showLog (Log.INFO, "karman" + AppConfigTags.SERVER_RESPONSE, response, true);
+                            Utils.showLog (Log.INFO, AppConfigTags.SERVER_RESPONSE, response, true);
                             if (response != null) {
                                 try {
                                     JSONObject jsonObj = new JSONObject (response);
                                     boolean error = jsonObj.getBoolean (AppConfigTags.ERROR);
                                     String message = jsonObj.getString (AppConfigTags.MESSAGE);
                                     if (! error) {
-                                        visitorDetailsPref.putStringPref (LoginActivity.this, VisitorDetailsPref.VISITOR_ID, jsonObj.getString (AppConfigTags.VISITOR_ID));
-                                        visitorDetailsPref.putStringPref (LoginActivity.this, VisitorDetailsPref.VISITOR_NAME, jsonObj.getString (AppConfigTags.VISITOR_NAME));
-                                        visitorDetailsPref.putStringPref (LoginActivity.this, VisitorDetailsPref.VISITOR_EMAIL, jsonObj.getString (AppConfigTags.VISITOR_EMAIL));
-                                        visitorDetailsPref.putStringPref (LoginActivity.this, VisitorDetailsPref.VISITOR_MOBILE, jsonObj.getString (AppConfigTags.VISITOR_MOBILE));
-                                        visitorDetailsPref.putStringPref (LoginActivity.this, VisitorDetailsPref.VISITOR_TYPE, jsonObj.getString (AppConfigTags.VISITOR_TYPE));
-                                        visitorDetailsPref.putStringPref (LoginActivity.this, VisitorDetailsPref.VISITOR_LOGIN_KEY, jsonObj.getString (AppConfigTags.VISITOR_LOGIN_KEY));
-                                        visitorDetailsPref.putIntPref (LoginActivity.this, VisitorDetailsPref.DATABASE_VERSION, 0);
+                                        userDetailsPref.putStringPref (LoginActivity.this, UserDetailsPref.USER_ID, jsonObj.getString (AppConfigTags.USER_ID));
+                                        userDetailsPref.putStringPref (LoginActivity.this, UserDetailsPref.USER_NAME, jsonObj.getString (AppConfigTags.USER_NAME));
+                                        userDetailsPref.putStringPref (LoginActivity.this, UserDetailsPref.USER_EMAIL, jsonObj.getString (AppConfigTags.USER_EMAIL));
+                                        userDetailsPref.putStringPref (LoginActivity.this, UserDetailsPref.USER_MOBILE, jsonObj.getString (AppConfigTags.USER_MOBILE));
+                                        userDetailsPref.putStringPref (LoginActivity.this, UserDetailsPref.USER_TYPE, jsonObj.getString (AppConfigTags.USER_TYPE));
+                                        userDetailsPref.putStringPref (LoginActivity.this, UserDetailsPref.USER_LOGIN_KEY, jsonObj.getString (AppConfigTags.USER_LOGIN_KEY));
                                         Intent intent = new Intent (LoginActivity.this, MainActivity.class);
                                         intent.setFlags (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity (intent);
@@ -348,9 +348,13 @@ public class LoginActivity extends AppCompatActivity {
                     new com.android.volley.Response.ErrorListener () {
                         @Override
                         public void onErrorResponse (VolleyError error) {
-                            progressDialog.dismiss ();
                             Utils.showLog (Log.ERROR, AppConfigTags.VOLLEY_ERROR, error.toString (), true);
+                            NetworkResponse response = error.networkResponse;
+                            if (response != null && response.data != null) {
+                                Utils.showLog (Log.ERROR, AppConfigTags.ERROR, new String (response.data), true);
+                            }
                             Utils.showSnackBar (LoginActivity.this, clMain, getResources ().getString (R.string.snackbar_text_error_occurred), Snackbar.LENGTH_LONG, getResources ().getString (R.string.snackbar_action_dismiss), null);
+                            progressDialog.dismiss ();
                         }
                     }) {
                 @Override
@@ -359,8 +363,8 @@ public class LoginActivity extends AppCompatActivity {
                     params.put (AppConfigTags.NAME, name);
                     params.put (AppConfigTags.EMAIL, email);
                     params.put (AppConfigTags.MOBILE, mobile);
-                    params.put (AppConfigTags.VISITOR_TYPE, visitor_type);
-                    params.put (AppConfigTags.FIREBASE_ID, visitorDetailsPref.getStringPref (LoginActivity.this, VisitorDetailsPref.VISITOR_FIREBASE_ID));
+                    params.put (AppConfigTags.USER_TYPE, visitor_type);
+                    params.put (AppConfigTags.FIREBASE_ID, userDetailsPref.getStringPref (LoginActivity.this, UserDetailsPref.USER_FIREBASE_ID));
                     params.put (AppConfigTags.OTP, String.valueOf (otp));
                     params.put (AppConfigTags.DEVICE_DETAILS, device_details);
                     Utils.showLog (Log.INFO, AppConfigTags.PARAMETERS_SENT_TO_THE_SERVER, "" + params, true);

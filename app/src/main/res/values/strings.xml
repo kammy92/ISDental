@@ -44,15 +44,18 @@
 
     <string name="activity_event_detail_title">EVENT DETAIL</string>
 
-    <string name="activity_shop_online_title">SHOP ONLINE</string>
+    <string name="activity_shop_online_title">Shop Online</string>
+    <string name="activity_shop_online_back_button">Back</string>
+
     <string name="activity_brands_contact_details_title">BRANDS CONTACT DETAILS</string>
 
-    <string name="activity_session_detail_title">SESSION DETAIL</string>
 
-    <string name="activity_session_list_title">SESSION LIST</string>
+    <string name="activity_brand_list_title">Brand List</string>
+    <string name="activity_brand_list_back_button">Back</string>
 
 
-    <string name="activity_information_title">ABOUT US</string>
+    <string name="activity_information_title">About Us</string>
+    <string name="activity_information_back_button">Back</string>
     <string name="activity_information_text_1">ISDental comes from IndiaSupply - market leader in
         providing digital solutions to dental practitioners.</string>
     <string name="activity_information_text_2">Tired of carrying offer sheets, collecting visting
