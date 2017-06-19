@@ -45,13 +45,11 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         holder.tvCompanyBrands.setTypeface (SetTypeFace.getTypeface (activity));
         holder.tvCompanyName.setText (company.getName ());
     
-        if (company.getBrands ().length () > 0) {
-//            holder.rlMain.setBackgroundColor (activity.getResources ().getColor (R.color.text_color_orange));
+        if (company.getBrands ().length () == 0 || company.getBrands ().equalsIgnoreCase ("null")) {
+            holder.tvCompanyBrands.setVisibility (View.GONE);
+        } else {
             holder.tvCompanyBrands.setText ("Deals In: " + company.getBrands ());
             holder.tvCompanyBrands.setVisibility (View.VISIBLE);
-        } else {
-//            holder.rlMain.setBackgroundColor (activity.getResources ().getColor (R.color.app_background));
-            holder.tvCompanyBrands.setVisibility (View.GONE);
         }
     }
 

@@ -115,8 +115,6 @@ public class LoginActivity extends AppCompatActivity {
         ss.setSpan (new myClickableSpan (2), 40, 54, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvTerm.setText (ss);
         tvTerm.setMovementMethod (LinkMovementMethod.getInstance ());
-
-
     }
 
     private void initView () {

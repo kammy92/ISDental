@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             slider.addSlider (slider2);
         }
         slider.getPagerIndicator ().setVisibility (View.GONE);
-        slider.setPresetTransformer (SliderLayout.Transformer.Default);
+        slider.setPresetTransformer (SliderLayout.Transformer.Fade);
         slider.setCustomAnimation (new DescriptionAnimation ());
         slider.setDuration (5000);
         slider.addOnPageChangeListener (new ViewPagerEx.OnPageChangeListener () {

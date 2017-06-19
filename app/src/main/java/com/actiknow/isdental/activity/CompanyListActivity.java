@@ -97,7 +97,7 @@ DatabaseHandler db;
         tvNoResult = (TextView) findViewById (R.id.tvNoResult);
         
         ivSort = (ImageView) findViewById (R.id.ivSort);
-        tvTitle = (TextView) findViewById (R.id.tvTitle);
+        tvTitle = (TextView) findViewById (R.id.tvType);
         searchView = (SearchView) findViewById (R.id.searchView);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById (R.id.swipeRefreshLayout);
         Utils.setTypefaceToAllViews (this, tvTitle);
@@ -163,7 +163,7 @@ DatabaseHandler db;
             slider.addSlider (slider2);
         }
         slider.getPagerIndicator ().setVisibility (View.GONE);
-        slider.setPresetTransformer (SliderLayout.Transformer.Default);
+        slider.setPresetTransformer (SliderLayout.Transformer.Fade);
         slider.setCustomAnimation (new DescriptionAnimation ());
         slider.setDuration (5000);
         slider.addOnPageChangeListener (new ViewPagerEx.OnPageChangeListener () {
@@ -388,7 +388,7 @@ DatabaseHandler db;
                                     boolean is_error = jsonObj.getBoolean (AppConfigTags.ERROR);
                                     String message = jsonObj.getString (AppConfigTags.MESSAGE);
                                     if (! is_error) {
-                                        JSONArray jsonArrayBrand = jsonObj.getJSONArray (AppConfigTags.COMPANY);
+                                        JSONArray jsonArrayBrand = jsonObj.getJSONArray (AppConfigTags.COMPANIES);
                                         for (int i = 0; i < jsonArrayBrand.length (); i++) {
                                             JSONObject jsonObjectBrand = jsonArrayBrand.getJSONObject (i);
                                             Company company = new Company (
@@ -449,7 +449,7 @@ DatabaseHandler db;
                     Map<String, String> params = new HashMap<> ();
                     UserDetailsPref userDetailsPref = UserDetailsPref.getInstance ();
                     params.put (AppConfigTags.HEADER_API_KEY, Constants.api_key);
-                    params.put (AppConfigTags.HEADER_USER_LOGIN_KEY, Constants.login_key);
+                    params.put (AppConfigTags.HEADER_USER_LOGIN_KEY, userDetailsPref.getStringPref (CompanyListActivity.this, UserDetailsPref.USER_LOGIN_KEY));
                     Utils.showLog (Log.INFO, AppConfigTags.HEADERS_SENT_TO_THE_SERVER, "" + params, false);
                     return params;
                 }

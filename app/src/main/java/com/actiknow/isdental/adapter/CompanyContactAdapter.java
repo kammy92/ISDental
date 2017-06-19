@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,8 @@ import android.widget.TextView;
 
 import com.actiknow.isdental.R;
 import com.actiknow.isdental.model.CompanyContact;
-import com.actiknow.isdental.utils.Constants;
 import com.actiknow.isdental.utils.SetTypeFace;
+import com.actiknow.isdental.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,62 +51,61 @@ public class CompanyContactAdapter extends RecyclerView.Adapter<CompanyContactAd
         holder.tvFullAddress.setTypeface (SetTypeFace.getTypeface (activity));
         holder.tvPhone1.setTypeface (SetTypeFace.getTypeface (activity));
         holder.tvPhone2.setTypeface (SetTypeFace.getTypeface (activity));
-        holder.tvTitle.setTypeface (SetTypeFace.getTypeface (activity));
         holder.tvTime.setTypeface (SetTypeFace.getTypeface (activity));
-        
-        if (contactDetails.getAttendant ().length () == 0) {
-            holder.rlContactPerson.setVisibility (View.GONE);
-        } else {
+        holder.tvTitle.setTypeface (SetTypeFace.getTypeface (activity));
+        holder.tvType.setTypeface (SetTypeFace.getTypeface (activity));
+        holder.tvDesignation.setTypeface (SetTypeFace.getTypeface (activity));
+    
+    
+        if (contactDetails.getType ().length () > 0) {
+            holder.tvType.setVisibility (View.VISIBLE);
+        }
+        if (contactDetails.getTitle ().length () > 0) {
+            holder.rlTitle.setVisibility (View.VISIBLE);
+        }
+        if (contactDetails.getAttendant ().length () > 0) {
             holder.rlContactPerson.setVisibility (View.VISIBLE);
         }
-        if (contactDetails.getTitle ().length () == 0) {
-            holder.tvTitle.setVisibility (View.GONE);
-        } else {
-            holder.tvTitle.setVisibility (View.VISIBLE);
-        }
-        if (contactDetails.getEmail ().length () == 0) {
-            holder.rlEmail.setVisibility (View.GONE);
-        } else {
-            holder.rlEmail.setVisibility (View.GONE);
-        }
-        
-        
-        if ((contactDetails.getPhone1 ().length () == 0) && (contactDetails.getPhone2 ().length () == 0)) {
-            holder.rlPhone.setVisibility (View.GONE);
-        } else if (contactDetails.getPhone1 ().length () == 0 && (contactDetails.getPhone2 ().length () != 0)) {
-            holder.tvPhone2.setVisibility (View.VISIBLE);
+//        if (contactDetails.getDesignation ().length () > 0) {
+//            holder.rlDesignation.setVisibility (View.VISIBLE);
+//        }
+        if ((contactDetails.getPhone1 ().length () > 0) || (contactDetails.getPhone2 ().length () > 0)) {
             holder.rlPhone.setVisibility (View.VISIBLE);
-            holder.tvPhone1.setVisibility (View.GONE);
-        } else if (contactDetails.getPhone1 ().length () != 0 && contactDetails.getPhone2 ().length () == 0) {
-            holder.rlPhone.setVisibility (View.VISIBLE);
-            holder.tvPhone1.setVisibility (View.VISIBLE);
-            holder.tvPhone2.setVisibility (View.GONE);
-        } else {
-            holder.rlPhone.setVisibility (View.VISIBLE);
-            holder.tvPhone1.setVisibility (View.VISIBLE);
-            holder.tvPhone2.setVisibility (View.VISIBLE);
+            if (contactDetails.getPhone1 ().length () > 0) {
+                holder.tvPhone1.setVisibility (View.VISIBLE);
+            }
+            if (contactDetails.getPhone2 ().length () > 0) {
+                holder.tvPhone2.setVisibility (View.VISIBLE);
+            }
         }
-        
-        if (contactDetails.getWebsite ().length () == 0) {
-            holder.rlWebsite.setVisibility (View.GONE);
-        } else {
+        if (contactDetails.getEmail ().length () > 0) {
+            holder.rlEmail.setVisibility (View.VISIBLE);
+        }
+        if (contactDetails.getWebsite ().length () > 0) {
             holder.rlWebsite.setVisibility (View.VISIBLE);
         }
-        
-        if (contactDetails.getAddress ().length () == 0) {
-            holder.rlAddress.setVisibility (View.GONE);
-        } else {
+        if (contactDetails.getOpen_time ().length () > 0 && contactDetails.getClose_time ().length () > 0 && contactDetails.getHolidays ().length () > 0) {
+            holder.rlTime.setVisibility (View.VISIBLE);
+        }
+        if (contactDetails.getAddress ().length () > 0) {
             holder.rlAddress.setVisibility (View.VISIBLE);
         }
-        
-        holder.tvContactPerson.setText (contactDetails.getAttendant ());
-        holder.tvEmail.setText (Html.fromHtml ("<u><font color='#0645AD'>" + contactDetails.getEmail () + "</font></u>"), TextView.BufferType.SPANNABLE);
-        holder.tvWebsite.setText (Html.fromHtml ("<u><font color='#0645AD'>" + contactDetails.getWebsite () + "</font></u>"), TextView.BufferType.SPANNABLE);
-        holder.tvFullAddress.setText (contactDetails.getAddress ());
+    
+        if (contactDetails.getDesignation ().length () > 0) {
+            holder.tvContactPerson.setText (contactDetails.getAttendant () + " (" + contactDetails.getDesignation () + ")");
+        } else {
+            holder.tvContactPerson.setText (contactDetails.getAttendant ());
+        }
+    
+    
+        holder.tvType.setText (contactDetails.getType ());
         holder.tvTitle.setText (contactDetails.getTitle ());
-        holder.tvPhone1.setText (Html.fromHtml ("<u><font color='#0645AD'>" + contactDetails.getPhone1 () + "</font></u>"), TextView.BufferType.SPANNABLE);
-        holder.tvPhone2.setText (Html.fromHtml ("<u><font color='#0645AD'>" + contactDetails.getPhone2 () + "</font></u>"), TextView.BufferType.SPANNABLE);
-        
+        //holder.tvDesignation.setText (contactDetails.getDesignation ());
+        holder.tvPhone1.setText (contactDetails.getPhone1 ());//Html.fromHtml ("<u><font color='#01579b'>" + contactDetails.getPhone1 () + "</font></u>"), TextView.BufferType.SPANNABLE);
+        holder.tvPhone2.setText (contactDetails.getPhone2 ());//Html.fromHtml ("<u><font color='#01579b'>" + contactDetails.getPhone2 () + "</font></u>"), TextView.BufferType.SPANNABLE);
+        holder.tvEmail.setText (contactDetails.getEmail ());//Html.fromHtml ("<u><font color='#01579b'>" + contactDetails.getEmail () + "</font></u>"), TextView.BufferType.SPANNABLE);
+        holder.tvWebsite.setText (contactDetails.getWebsite ());//Html.fromHtml ("<u><font color='#01579b'>" + contactDetails.getWebsite () + "</font></u>"), TextView.BufferType.SPANNABLE);
+        holder.tvFullAddress.setText (contactDetails.getAddress ());
         
         try {
             Calendar c = Calendar.getInstance ();
@@ -121,7 +119,8 @@ public class CompanyContactAdapter extends RecyclerView.Adapter<CompanyContactAd
             Calendar calendar2 = Calendar.getInstance ();
             calendar2.setTime (time2);
             calendar2.add (Calendar.DATE, 1);
-            
+    
+    
             String someRandomTime = new SimpleDateFormat ("HH:mm:ss").format (c.getTime ());
             Date d = new SimpleDateFormat ("HH:mm:ss").parse (someRandomTime);
             Calendar calendar3 = Calendar.getInstance ();
@@ -134,24 +133,41 @@ public class CompanyContactAdapter extends RecyclerView.Adapter<CompanyContactAd
             String day[] = contactDetails.getHolidays ().trim ().split (",");
             SimpleDateFormat dayFormat = new SimpleDateFormat ("EEE", Locale.US);
             Calendar calendar = Calendar.getInstance ();
-            
-            
-            for (int i = 0; i < day.length; i++)
+    
+    
+            if (currentTime.after (calendar1.getTime ()) && currentTime.before (calendar2.getTime ())) {
+                holder.tvTime.setText ("Open till " + Utils.convertTimeFormat (contactDetails.getClose_time (), "HH:mm:ss", "HH:mm"));
+            } else {
+                holder.tvTime.setText ("Closed Now");
+            }
+    
+    
+            if (contactDetails.getOpen_time ().equalsIgnoreCase ("00:00:00") || contactDetails.getClose_time ().equalsIgnoreCase ("00:00:00")) {
+                holder.tvTime.setVisibility (View.GONE);
+            }
+    
+    
+            for (int i = 0; i < day.length; i++) {
+                if (dayFormat.format (calendar.getTime ()).equalsIgnoreCase (day[i])) {
+                    holder.tvTime.setText ("Closed Today");
+                }
+            }
+            /*
                 if (dayFormat.format (calendar.getTime ()).equalsIgnoreCase (day[i])) {
                     holder.tvTime.setText ("today is holiday");
-                    
                 } else if (currentTime.after (calendar1.getTime ()) && currentTime.before (calendar2.getTime ())) {
                     //checkes whether the current time is between 14:49:00 and 20:11:13.
                     
                     long diff = endTime.getTime () - currentTime.getTime ();
                     diff = diff / (60 * 1000);
                     float diffHours = diff / 60;
-                    
-                    holder.tvTime.setText ("Time in the range" + "Left time is " + " " + diffHours + ":" + diff);
+                    float diffMin = diff % 60;
+    
+                    holder.tvTime.setText ("Time in the range" + "Left time is " + " " + diffHours + ":" + diffMin);
                     
                 } else {
                     holder.tvTime.setText ("closed");
-                }
+                }*/
         } catch (java.text.ParseException e) {
             e.printStackTrace ();
         }
@@ -200,27 +216,6 @@ public class CompanyContactAdapter extends RecyclerView.Adapter<CompanyContactAd
                 activity.startActivity (intent);
             }
         });
-        
-        
-        for (int i = 0; i < contactDetails.getContactList ().size (); i++) {
-            final ArrayList<String> contactList2 = contactDetails.getContactList ();
-            TextView tv = new TextView (activity);
-            tv.setText (Html.fromHtml ("<u><font color='#0645AD'>" + contactList2.get (i) + "</font></u>"), TextView.BufferType.SPANNABLE);
-            tv.setTextSize (16);
-            tv.setPadding (0, 5, 0, 5);
-            tv.setTypeface (SetTypeFace.getTypeface (activity, Constants.font_name));
-            tv.setTextColor (activity.getResources ().getColor (R.color.app_text_color_dark));
-            final int finalI = i;
-            tv.setOnClickListener (new View.OnClickListener () {
-                @Override
-                public void onClick (View v) {
-                    Intent sIntent = new Intent (Intent.ACTION_DIAL, Uri.parse ("tel:" + contactList2.get (finalI)));
-                    sIntent.setFlags (Intent.FLAG_ACTIVITY_NEW_TASK);
-                    activity.startActivity (sIntent);
-                }
-            });
-            holder.llPhone.addView (tv);
-        }
     }
     
     
@@ -238,40 +233,49 @@ public class CompanyContactAdapter extends RecyclerView.Adapter<CompanyContactAd
     }
     
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView tvType;
+        TextView tvTitle;
         TextView tvContactPerson;
-        LinearLayout llPhone;
-        TextView tvEmail;
-        TextView tvWebsite;
+        TextView tvDesignation;
         TextView tvPhone1;
         TextView tvPhone2;
+        LinearLayout llPhone;
         TextView tvTime;
-        TextView tvTitle;
+        TextView tvEmail;
+        TextView tvWebsite;
         TextView tvFullAddress;
-        
+    
+        RelativeLayout rlTitle;
         RelativeLayout rlContactPerson;
+        RelativeLayout rlDesignation;
         RelativeLayout rlPhone;
+        RelativeLayout rlTime;
         RelativeLayout rlEmail;
         RelativeLayout rlWebsite;
         RelativeLayout rlAddress;
         
         public ViewHolder (View view) {
             super (view);
+            tvType = (TextView) view.findViewById (R.id.tvType);
+            tvTitle = (TextView) view.findViewById (R.id.tvTitle);
             tvContactPerson = (TextView) view.findViewById (R.id.tvContactPerson);
-            tvEmail = (TextView) view.findViewById (R.id.tvEmail);
-            tvWebsite = (TextView) view.findViewById (R.id.tvWebsite);
-            tvFullAddress = (TextView) view.findViewById (R.id.tvFullAddress);
+            tvDesignation = (TextView) view.findViewById (R.id.tvDesignation);
             tvPhone1 = (TextView) view.findViewById (R.id.tvPhone1);
             tvPhone2 = (TextView) view.findViewById (R.id.tvPhone2);
             tvTime = (TextView) view.findViewById (R.id.tvTime);
-            tvTitle = (TextView) view.findViewById (R.id.tvTitle);
+            tvEmail = (TextView) view.findViewById (R.id.tvEmail);
+            tvWebsite = (TextView) view.findViewById (R.id.tvWebsite);
+            tvFullAddress = (TextView) view.findViewById (R.id.tvFullAddress);
             llPhone = (LinearLayout) view.findViewById (R.id.llPhone);
-            
+    
+            rlTitle = (RelativeLayout) view.findViewById (R.id.rlTitle);
             rlContactPerson = (RelativeLayout) view.findViewById (R.id.rlContactPerson);
+            rlDesignation = (RelativeLayout) view.findViewById (R.id.rlDesignation);
             rlPhone = (RelativeLayout) view.findViewById (R.id.rlPhone);
+            rlTime = (RelativeLayout) view.findViewById (R.id.rlTime);
             rlEmail = (RelativeLayout) view.findViewById (R.id.rlEmail);
             rlWebsite = (RelativeLayout) view.findViewById (R.id.rlWebsite);
             rlAddress = (RelativeLayout) view.findViewById (R.id.rlAddress);
-            
             view.setOnClickListener (this);
         }
         

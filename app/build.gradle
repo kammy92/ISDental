@@ -7,10 +7,12 @@ android {
         applicationId "com.actiknow.isdental"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.0.2"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 4
+        versionName "1.0.3"
+        multiDexEnabled true
     }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -29,7 +31,6 @@ dependencies {
 
 
 
-    compile "com.google.android.gms:play-services:10.2.0"
 
     // Google Firebase Library
     compile "com.google.firebase:firebase-messaging:10.2.0"
@@ -49,5 +50,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.nineoldandroids:library:2.4.0'
 
-    compile 'com.facebook.android:facebook-android-sdk:4.+'
+
 }
+apply plugin: 'com.google.gms.google-services'
